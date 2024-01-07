@@ -5,14 +5,25 @@ const UserNameSchema = new Schema<UserName>({
     
         firstName: {
             type: String,
-            required: true,
+            required: [true, 'First Name is required'],
+            trim: true,
+            maxlength: [20, 'First Name can not be more than 20 characters'],
+            validate: {
+                validator: function (value: string) {
+                    const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1)
+                    return firstNameStr === value
+                },
+                message: '{VALUE} is not capitalize format'
+            }
         },
         middleName: {
             type: String,
+            trim: true,
         },
         lastName: {
             type: String,
-            required: true,
+            trim: true,
+            required: [true, 'Last Name is required'],
         }
 })
 
@@ -37,20 +48,44 @@ const localGuardianSchema = new Schema<LocalGuardian>(
 )
 
 const studentSchema = new Schema<Student>({
-    id: { type: String },
-    name: UserNameSchema,
-    gender: ["male", "female"],
+    id: { type: String, required: true, unique: true },
+    name: {
+        type: UserNameSchema,
+        required: true,
+    },
+    gender: {
+        type: String,
+        enum: {
+            values: ["male", "female", "other"],
+            message: '{VALUE} is not valid',
+        },
+        required: true,
+    },
     dateOfBirth: {type : String },
-    email: { type : String, required: true},
+    email: { type : String, required: true, unique: true},
     contactNo:  { type : String, required: true},
     emergencyContactNo:  { type : String, required: true},
-    bloodGroup: ['A+', 'B-', 'O+', 'AB+', 'A+', 'O-'],
+    bloodGroup: {
+        type: String,
+        enum: ['A+', 'B-', 'O+', 'AB+', 'A+', 'O-'],
+
+    },
     presentAddress: { type : String, required: true},
     permanentAddress: { type : String, required: true},
-    guardian: guardianSchema,
-    localGuardian: localGuardianSchema,
+    guardian: {
+        type: guardianSchema,
+        required: true,
+    },
+    localGuardian: {
+        type: localGuardianSchema,
+        required: true,
+    },
     profileImg: {type : String},
-    isActive: [ 'active', 'blocked']
+    isActive: {
+        type: String,
+        enum: [ 'active', 'blocked'],
+        default: 'active'
+    }
 })
 
 export const StudentModel = model<Student>('Student', studentSchema)
