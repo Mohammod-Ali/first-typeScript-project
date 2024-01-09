@@ -71,16 +71,16 @@ const studentSchema = new Schema<Student>({
          type : String, 
          required: [true, 'Email is required'], 
          unique: true,
-         validate: {
-            validator: (value: string) => validator.isEmail(value),
-            message: '{VALUE} is not a valid email'
-         }
+        //  validate: {
+        //     validator: (value: string) => validator.isEmail(value),
+        //     message: '{VALUE} is not a valid email'
+        //  }
         },
     contactNo:  { type : String, required: true},
     emergencyContactNo:  { type : String, required: true},
     bloodGroup: {
         type: String,
-        enum: ['A+', 'B-', 'O+', 'AB+', 'A+', 'O-'],
+        enum: [],
 
     },
     presentAddress: { type : String, required: true},
