@@ -6,35 +6,22 @@ import studentValidationSchema from "./student.validation"
 const createStudent = async (req: Request, res: Response) => {
      
     try{
-
-        // creating a schema validation using Joi
-
-        // const JoiValidationSchema = Joi.object({
-        //     id: Joi.string(),
-        //     name: {
-        //         firstName: Joi.string().max(20).required(),
-        //         middleName: Joi.string().max(20),
-        //         lastName: Joi.string().max(20)
-        //     },
-        //     gender: Joi.string().required().valid(['male', 'female', 'other'])
-        // })
-
       
-
-
-
         const {student : studentData} = req.body
 
-        const result = await StudentServices.createStudentIntoDB(studentData)
+        // data validation using Joi
+        const { error, value } = studentValidationSchema.validate(studentData)
 
-       const { error } = studentValidationSchema.validate(studentData)
+        const result = await StudentServices.createStudentIntoDB(value)
 
-
+      if(error){
         res.status(200).json({
             success: true,
             message: 'Student is created successfully',
             data: result,
         })
+      }
+      
     }catch(err){
         res.status(500).json({
             success: false,
