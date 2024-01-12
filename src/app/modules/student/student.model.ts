@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import { Guardian, LocalGuardian, Student, UserName } from './student.interface';
 
-const UserNameSchema = new Schema<UserName>({
+const UserNameValidationSchema = new Schema<UserName>({
     
         firstName: {
             type: String,
@@ -32,7 +32,7 @@ const UserNameSchema = new Schema<UserName>({
         }
 })
 
-const guardianSchema = new Schema<Guardian>(
+const GuardianValidationSchema = new Schema<Guardian>(
     {
         fatherName:  { type : String, required: true},
         fatherOccupation:  { type : String, required: true},
@@ -43,7 +43,7 @@ const guardianSchema = new Schema<Guardian>(
     }
 )
 
-const localGuardianSchema = new Schema<LocalGuardian>(
+const localGuardianValidationSchema = new Schema<LocalGuardian>(
     {
         name: { type : String, required: true},
         occupation: { type : String, required: true},
@@ -55,7 +55,7 @@ const localGuardianSchema = new Schema<LocalGuardian>(
 const studentSchema = new Schema<Student>({
     id: { type: String, required: true, unique: true },
     name: {
-        type: UserNameSchema,
+        type: UserNameValidationSchema,
         required: true,
     },
     gender: {
@@ -86,11 +86,11 @@ const studentSchema = new Schema<Student>({
     presentAddress: { type : String, required: true},
     permanentAddress: { type : String, required: true},
     guardian: {
-        type: guardianSchema,
+        type: GuardianValidationSchema,
         required: true,
     },
     localGuardian: {
-        type: localGuardianSchema,
+        type: localGuardianValidationSchema,
         required: true,
     },
     profileImg: {type : String},
