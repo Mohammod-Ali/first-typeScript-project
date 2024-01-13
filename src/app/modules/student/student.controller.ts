@@ -28,21 +28,21 @@ const createStudent = async (req: Request, res: Response) => {
 
         const result = await StudentServices.createStudentIntoDB(zodparsedData)
 
-    //   if(error){
-    //     res.status(200).json({
-    //         success: true,
-    //         message: 'Student is created successfully',
-    //         data: result,
-    //     })
-    //   }
+      
+        res.status(200).json({
+            success: true,
+            message: 'Student is created successfully',
+            data: result,
+        })
+      
 
-    // }catch(err){
-    //     res.status(500).json({
-    //         success: false,
-    //         message: 'Something went wrong',
-    //         err: err,
-    //     })
-    // }
+    }catch(err: any){
+        res.status(500).json({
+            success: false,
+            message: err.message || 'Something went wrong',
+            err: err,
+        })
+    }
 }
 
 const getAllStudents = async (req: Request, res: Response) => {
