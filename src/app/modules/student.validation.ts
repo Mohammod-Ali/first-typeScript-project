@@ -15,9 +15,6 @@ const userNameValidationSchema = z.object({
   middleName: z.string().optional(),
   lastName: z
     .string()
-    .refine((value) => validator.isAlpha(value), {
-      message: 'Last Name is not valid',
-    })
     .min(1, { message: 'Last Name is required' }),
 });
 
@@ -38,7 +35,7 @@ const guardianValidationSchema = z.object({
     .min(1, { message: 'Mother Contact No is required' }),
 });
 
-const LocalGuardianValidationSchema = z.object({
+const localGuardianValidationSchema = z.object({
   name: z.string().min(1, { message: 'Local Guardian Name is required' }),
   occupation: z
     .string()
@@ -51,12 +48,10 @@ const LocalGuardianValidationSchema = z.object({
 
 export const StudentValidationSchema = z.object({
   id: z.string().min(1, { message: 'Student ID is required' }),
-  name: UserNameValidationSchema,
+  name: userNameValidationSchema,
   gender: z
-    .string()
-    .enum(['male', 'female', 'other'])
-    .message('Gender is not valid'),
-  dateOfBirth: z.string().optional(),
+    .enum(['male', 'female', 'other']),
+  dateOfBirth: z.string(),
   email: z
     .string()
     .min(1, { message: 'Email is required' })
@@ -65,15 +60,15 @@ export const StudentValidationSchema = z.object({
   emergencyContactNo: z
     .string()
     .min(1, { message: 'Emergency Contact No is required' }),
-  bloodGroup: z.string().optional(),
+  bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']).optional(),
   presentAddress: z.string().min(1, { message: 'Present Address is required' }),
   permanentAddress: z
     .string()
     .min(1, { message: 'Permanent Address is required' }),
-  guardian: GuardianValidationSchema,
-  localGuardian: LocalGuardianValidationSchema,
+  guardian: guardianValidationSchema,
+  localGuardian: localGuardianValidationSchema,
   profileImg: z.string().optional(),
-  isActive: z.string().enum(['active', 'blocked']).default('active'),
+  isActive: z.enum(['active', 'blocked']).default('active'),
 });
 
 export default studentValidationSchema;

@@ -1,18 +1,29 @@
 import { Request, Response } from 'express';
 import { StudentServices } from './student.service';
-import { z } from 'zod';
+import { StudentValidationSchema } from '../student.validation';
 // import Joi from 'joi'
-// import studentValidationSchema from "./student.validation"
 
 const createStudent = async (req: Request, res: Response) => {
   try {
     // creating a schema validation using zod
-    const studentValidationSchema = z.object({
-        id: z.string(),
-        name: z.object({
-            firstName: z.string().max(20, {message: 'First name can not be more than 20 characters'})
-        })
-    })
+    // const studentValidationSchema = z.object({
+    //     id: z.string(),
+    //     name: z.object({
+    //         firstName: z.string().max(20, {message: 'First name can not be more than 20 characters'})
+    //     })
+    // })
+
+    // data validation using Joi
+    // const { error, value } = studentValidationSchema.validate(studentData)
+
+    
+    // if (error) {
+    //   res.status(500).json({
+    //     success: false,
+    //     message: 'something went wrong',
+    //     error: error.details,
+    //   });
+    // }
 
     const { student: studentData } = req.body;
 
@@ -20,31 +31,24 @@ const createStudent = async (req: Request, res: Response) => {
 
     const zodparsedData = StudentValidationSchema.parse(studentData);
 
-    // data validation using Joi
-    // const { error, value } = studentValidationSchema.validate(studentData)
+    const result = await StudentServices.createStudentIntoDB(zodparsedData);
 
-       const result = await StudentServices.createStudentIntoDB(studentData);
-
-    if(error) {
-      res.status(500).json({
-        success: false,
-        message: 'something went wrong',
-        error: error.details
-      })
-    }
-
- 
 
     res.status(200).json({
       success: true,
       message: 'Student is created successfully',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+     let message = "Something went wrong";
+
+  if (err instanceof Error) {
+    message = err.message;
+  }
     res.status(500).json({
       success: false,
-      message: err.message || 'Something went wrong',
-      err: err,
+      message,
+      error: err,
     });
   }
 };
