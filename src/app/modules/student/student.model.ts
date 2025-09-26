@@ -82,7 +82,7 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   emergencyContactNo: { type: String, required: true },
   bloodGroup: {
     type: String,
-    enum: [],
+    enum: ['A+', 'A-','B+', 'B-', 'O+', 'AB+', 'O-'],
   },
   presentAddress: { type: String, required: true },
   permanentAddress: { type: String, required: true },
