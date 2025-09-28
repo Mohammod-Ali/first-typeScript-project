@@ -57,7 +57,7 @@ const localGuardianValidationSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required:  [true, 'ID is required'], unique: true },
-  password: { type: String, required: [true, 'Password is required'], unique: true, maxlength: [20, 'Password can not be more than 20 characters'] },
+  password: { type: String, required: [true, 'Password is required'], maxlength: [20, 'Password can not be more than 20 characters'] },
   name: {
     type: UserNameValidationSchema,
     required: true,
@@ -102,6 +102,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', 'blocked'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // pre save middleware / hook : will work on create()  save()
@@ -116,8 +120,15 @@ studentSchema.pre('save', async function(next) {
 })
 
 // post save middleware / hook
-studentSchema.post('save', function() {
-  console.log(this, 'post hook : we saved our data')
+studentSchema.post('save', function(doc, next) {
+  doc.password=''
+  next()
+})
+
+// Query middleware
+studentSchema.pre('find', function(next) {
+  this.find()
+  next()
 })
 
 
