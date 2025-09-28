@@ -16,7 +16,8 @@ const createStudent = async (req: Request, res: Response) => {
     // data validation using Joi
     // const { error, value } = studentValidationSchema.validate(studentData)
 
-    
+
+    // here check the error
     // if (error) {
     //   res.status(500).json({
     //     success: false,
